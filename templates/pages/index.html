@@ -1,0 +1,291 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load i18n %}
+
+{% load static %}
+{% block title %} | Welcome {{user.username}}{% endblock %}
+{% block content %}
+
+<!-- Showcase -->
+<section id="showcase">
+
+</section>
+<!-- Alerts -->
+<br>
+{% include 'partials/_alerts.html' %}
+
+<section class="card col-lg-12" style="border: 0px;">
+<section style="margin-right: auto;margin-left: auto;">
+  <div style="margin-top: 60px" class="row">
+
+    <div class="card col-md-6" style="border: 0px;">
+      <img src="/static/img/Buy_a_home.png" class="card-img-top" alt="Buy a home">
+      <div class="card-body">
+        <a href="/Buy/" class="btn btn-primary btn-lg btn-block">{% trans "Cherche Maison à vendre?" %}</a>
+      </div>
+    </div>
+    <div class="card col-md-6" style="border: 0px;">
+      <img src="/static/img/Rent_a_home.png" class="card-img-top" alt="Rent a home">
+      <div class="card-body">
+        <a href="/Rent/" class="btn btn-primary btn-lg btn-block">{% trans "Cherche Maison à louer?" %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="margin-right: auto;margin-left: auto;">
+  <div class="row" style="margin-top: 60px">
+    <div class="card col-md-6" style="border: 0px;">
+      <img src="/static/img/local_commercial.png" class="card-img-top" alt="Local Commercial">
+      <div class="card-body">
+        <a href="/localcommercials/search/" class="btn btn-primary btn-lg btn-block">{% trans "Cherche Local Commercial?" %}</a>
+      </div>
+    </div>
+    <div class="card col-md-6" style="border: 0px;">
+      <img src="/static/img/fond_de_commerce.png" class="card-img-top" alt="Fond de commerce">
+      <div class="card-body">
+        <a href="/fonddecommerces/search/" class="btn btn-primary btn-lg btn-block">{% trans "Cherche Fond de Commerce?" %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="margin-right: auto;margin-left: auto;">
+  <div class="row" style="margin-top: 60px">
+    <div class="card col-md-6" style="border: 0px;">
+      <img src="/static/img/Terrain.png" class="card-img-top" alt="Buy Terrain">
+      <div class="card-body">
+        <a href="/terrains/search/" class="btn btn-primary btn-lg btn-block">{% trans "Cherche un terrain?" %}</a>
+      </div>
+    </div>
+    <div class="card col-md-6" style="border: 0px;">
+      <img src="/static/img/Sell_a_home.png" class="card-img-top" alt="Sell a home">
+      <div class="card-body">
+        <a href="/selling/Sell/" class="btn btn-primary btn-lg btn-block">{% trans "Vous voulez vendre?" %}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</section>
+
+<!-- Latest Listings -->
+<section id="listings" class="py-5">
+  <div class="container">
+    <h3 class="text-center mb-3"><strong>{% trans "Dernières annonces de maisons" %}</strong></h3>
+    <div class="row">
+      {% if listings %}
+      {% for listing in listings %}
+      <div class="col-md-6 col-lg-4 mb-4" style=>
+        <div class="card listing-preview">
+          <img class="card-img-top" src="{{ listing.photo_main.url }}" alt="">
+          <div class="card-img-overlay">
+            <h2>
+              <span class="badge badge-secondary text-white">{{ listing.price|intcomma }} DT</span>
+              <span class="badge badge-secondary text-white">{{ listing.type }}</span>
+              <span class="badge badge-secondary text-white">{{ listing.style }}</span>
+            </h2>
+          </div>
+          <div class="card-body">
+            <div class="listing-heading text-center">
+              <h4 class="text-primary">{{ listing.tittle }}</h4>
+              <p>
+                <i class="fas fa-map-marker text-secondary"></i> {{ listing.city }} {{ listing.state }}, {{ listing.zipcode }}</p>
+            </div>
+            <hr>
+            <div class="row py-2 text-secondary">
+              <div class="col-6">
+                <i class="fas fa-th-large"></i> {% trans "Surface:" %} {{ listing.surface }} m²</div>
+              <div class="col-6">
+                <i class="fas fa-car"></i> {% trans "Garage:" %} {{ listing.garage }}</div>
+            </div>
+            <div class="row py-2 text-secondary">
+              <div class="col-6">
+                <i class="fas fa-bed"></i> {% trans "Chambres:" %} {{ listing.bedrooms }}</div>
+              <div class="col-6">
+                <i class="fas fa-bath"></i> {% trans "salle de bain:" %} {{ listing.bathrooms }}</div>
+            </div>
+            <hr>
+            <div class="row py-2 text-secondary">
+              <div class="col-6">
+                <i class="fas fa-user"></i>{{ listing.realtor }}</div>
+            </div>
+            <div class="row text-secondary pb-2">
+              <div class="col-12">
+                <i class="fas fa-clock"></i>{{ listing.list_date|timesince }}</div>
+            </div>
+            <hr>
+            <a href="{% url 'listing' listing.id %}" class="btn btn-primary btn-block">{% trans "Plus d'informations" %}</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="col-md-12">{% trans "Pas d'annonces disponibles" %}</div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- Latest Terrain -->
+<section id="listings" class="py-5">
+  <div class="container">
+    <h3 class="text-center mb-3"><strong>{% trans "Dernières annonces de Terrains" %}</strong></h3>
+    <div class="row">
+      {% if terrains %}
+      {% for terrain in terrains %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card listing-preview">
+          <img class="card-img-top" src="{{ terrain.photo_main.url }}" alt="">
+          <div class="card-img-overlay">
+            <h2>
+              <span class="badge badge-secondary text-white">{{ terrain.price|intcomma }} DT</span>
+              <span class="badge badge-secondary text-white">{{ terrain.type }}</span>
+            </h2>
+          </div>
+          <div class="card-body">
+            <div class="listing-heading text-center">
+              <h4 class="text-primary">{{ terrain.tittle }}</h4>
+              <p>
+                <i class="fas fa-map-marker text-secondary"></i> {{ terrain.city }} {{ terrain.state }}, {{ terrain.zipcode }}</p>
+            </div>
+            <div class="row py-2 text-secondary">
+              <div class="col-6">
+                <i class="fas fa-user"></i>{{ terrain.realtor }}</div>
+            </div>
+            <div class="row text-secondary pb-2">
+              <div class="col-12">
+                <i class="fas fa-clock"></i>{{ terrain.list_date|timesince }}</div>
+            </div>
+            <hr>
+            <a href="{% url 'terrain' terrain.id %}" class="btn btn-primary btn-block">{% trans "Plus d'informations" %}</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="col-md-12">{% trans "Pas de terrains disponibles" %}</div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- Latest Fond de Commerce -->
+<section id="listings" class="py-5">
+  <div class="container">
+    <h3 class="text-center mb-3"><strong>{% trans "Dernières annonces de Fond de Commerce" %}</strong></h3>
+    <div class="row">
+      {% if fonddecommerces %}
+      {% for fonddecommerce in fonddecommerces %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card listing-preview">
+          <img class="card-img-top" src="{{ fonddecommerce.photo_main.url }}" alt="">
+          <div class="card-img-overlay">
+            <h2>
+              <span class="badge badge-secondary text-white">{{ fonddecommerce.price|intcomma }} DT</span>
+              <span class="badge badge-secondary text-white">{{ fonddecommerce.type }}</span>
+            </h2>
+          </div>
+          <div class="card-body">
+            <div class="listing-heading text-center">
+              <h4 class="text-primary">{{ fonddecommerce.tittle }}</h4>
+              <p>
+                <i class="fas fa-map-marker text-secondary"></i> {{ fonddecommerce.city }} {{ fonddecommerce.state }}, {{ fonddecommerce.zipcode }}</p>
+            </div>
+            <div class="row py-2 text-secondary">
+              <div class="col-6">
+                <i class="fas fa-user"></i>{{ fonddecommerce.realtor }}</div>
+            </div>
+            <div class="row text-secondary pb-2">
+              <div class="col-12">
+                <i class="fas fa-clock"></i>{{ fonddecommerce.list_date|timesince }}</div>
+            </div>
+            <hr>
+            <a href="{% url 'fonddecommerce' fonddecommerce.id %}" class="btn btn-primary btn-block">{% trans "Plus d'informations" %}</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="col-md-12">{% trans "Pas de Fond de Commerce disponible" %}</div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- Latest Local Commercial -->
+<section id="listings" class="py-5">
+  <div class="container">
+    <h3 class="text-center mb-3"><strong>{% trans "Dernières annonces de Local Commercial" %}</strong></h3>
+    <div class="row">
+      {% if localcommercials %}
+      {% for localcommercial in localcommercials %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card listing-preview">
+          <img class="card-img-top" src="{{ localcommercial.photo_main.url }}" alt="">
+          <div class="card-img-overlay">
+            <h2>
+              <span class="badge badge-secondary text-white">{{ localcommercial.price|intcomma }} DT</span>
+              <span class="badge badge-secondary text-white">{{ localcommercial.type }}</span>
+            </h2>
+          </div>
+          <div class="card-body">
+            <div class="listing-heading text-center">
+              <h4 class="text-primary">{{ localcommercial.tittle }}</h4>
+              <p>
+                <i class="fas fa-map-marker text-secondary"></i> {{ localcommercial.city }} {{ localcommercial.state }}, {{ localcommercial.zipcode }}</p>
+            </div>
+            <div class="row py-2 text-secondary">
+              <div class="col-6">
+                <i class="fas fa-user"></i>{{ localcommercial.realtor }}</div>
+            </div>
+            <div class="row text-secondary pb-2">
+              <div class="col-12">
+                <i class="fas fa-clock"></i>{{ localcommercial.list_date|timesince }}</div>
+            </div>
+            <hr>
+            <a href="{% url 'localcommercial' localcommercial.id %}" class="btn btn-primary btn-block">{% trans "Plus d'informations" %}</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="col-md-12">{% trans "Pas de local commercial disponible" %}</div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+
+<section id="services" class="py-5 bg-secondary text-white">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-4">
+        <i class="fas fa-comment fa-4x mr-4"></i>
+        <hr>
+        <h3>Les services de consultation</h3>
+        <p>Faire de vos rêves notre projet …. Lorsque nous vendons une maison, nous vendons aussi des rêves, de souvenirs, un passé, un avenir. C’est pourquoi, nous restons humains, à l’écoute et bon de bon conseil quant à l’évaluation et à la
+          présentation de votre propriété.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-home fa-4x mr-4"></i>
+        <hr>
+        <h3>Gestion des biens</h3>
+        <p>Mettre en ligne une annonce, fixer un panneau, ouvrir une porte, réaliser une visite… Notre métier ne se réduit pas à cela… L’efficacité, la connaissance des lois en vigueur, le professionnalisme et la maîtrise d’une stratégie marketing
+          étudiée, voilà ce qui fera du temps et de l’argent.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-suitcase fa-4x mr-4"></i>
+        <hr>
+        <h3>Location et vente</h3>
+        <p>Votre tranquillité d’esprit fera notre bonheur. Pour arriver à gagner ce pari, nous impliquons en agissant comme si c’était pour nous. L’exigence du travail bien fait est une valeur que nous cultivons pour nous mêmes mais encore plus pour
+          vos projet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load i18n %}
+{% load static %}
+{% block title %} | Page d'achat {{user.username}}{% endblock %}
+{% block content %}
+
+<!-- Showcase -->
+<section id="showcase">
+  <div class="container text-center">
+    <div class="home-search p-5">
+      <div class="overlay p-5">
+        <h1 class="display-4 mb-4">
+          {% trans "Nous vous aiderons à trouver un endroit que vous aimerez." %}
+        </h1>
+        <h1></h1>
+        <p class="lead">{% trans "Trouvez votre lieu avec une expérience photo immersive et le plus grand nombre d'annonces, y compris des choses que vous ne trouverez nulle part ailleurs!" %}</p>
+        <div class="search">
+          <form action="{% url 'search' %}">
+            <!-- Form Row 1 -->
+            <div class="form-row">
+              <div class="col-md-6 mb-3">
+                <label class="sr-only">Keywords</label>
+                <input type="text" name="keywords" class="form-control" placeholder="Keyword (Pool, Garage, etc)" value="{{values.keywords}}">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="sr-only">biens</label>
+                  <select name="biens" class="form-control">
+                    <option selected="true" disabled="disabled">{% trans "biens" %}</option>
+                    {% for key,value in buy_choices.items %}
+                      <option value="{{ key }}">{{ value }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+            </div>
+
+            <!-- Form Row 2 -->
+            <div class="form-row">
+              <div class="col-md-6 mb-3">
+                <label class="sr-only">City</label>
+                <select name="city" class="form-control">
+                  <option selected="true" disabled="disabled">{% trans "Cité (Nabeul)" %}</option>
+                  {% for key,value in Nabeul_Choices.items %}
+                  <option name="city" value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="sr-only">City</label>
+                <select name="city" class="form-control">
+                  <option selected="true" disabled="disabled">{% trans "Cité (Sousse)" %}</option>
+                  {% for key,value in Sousse_Choices.items %}
+                  <option name="city" value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <!-- Form Row 3 -->
+            <div class="form-row">
+              <div class="col-md-6 mb-3">
+                <label class="sr-only">Bedrooms</label>
+                <select name="bedrooms" class="form-control">
+                  <option selected="true" disabled="disabled">{% trans "Chambres (Any)" %}</option>
+                  {% for key,value in bedroom_choices.items %}
+                    <option value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="sr-only">Garage</label>
+                <select name="garage" class="form-control">
+                  <option selected="true" disabled="disabled">{% trans "Garage" %}</option>
+                  {% for key,value in garage_choices.items %}
+                    <option value="{{ key }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <!-- Form Row 4 -->
+            <div class="form-row">
+              <div class="col-md-6 mb-3">
+                <select name="pricemin" class="form-control">
+                  <option selected="true" disabled="disabled">{% trans "Prix (Min)" %}</option>
+                  {% for key,value in pricemin_choices.items %}
+                    <option value="{{ key }}" {% if key == values.pricemin %} selected {% endif %}>{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-md-6 mb-3">
+                <select name="pricemax" class="form-control">
+                  <option selected="true" disabled="disabled">{% trans "Prix (Max)" %}</option>
+                  {% for key,value in price_choices.items %}
+                    <option value="{{ key }}" {% if key == values.pricemax %} selected {% endif %}>{{ value }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <button class="btn btn-secondary btn-block mt-4" type="submit">{% trans "Chercher" %}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Alerts -->
+<br>
+{% include 'partials/_alerts.html' %}
+
+<!-- Listings -->
+<section id="listings" class="py-5">
+  <div class="container">
+    <h3 class="text-center mb-3">{% trans "Dernières annonces à vendre" %}</h3>
+    <div class="row">
+      {% if listings %}
+      {% for listing in listings %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card listing-preview">
+          <img class="card-img-top" src="{{ listing.photo_main.url }}" alt="">
+          <div class="card-img-overlay">
+            <h2>
+              <span class="badge badge-secondary text-white">{{ listing.price|intcomma }} DT</span>
+              <span class="badge badge-secondary text-white">{{ listing.type }}</span>
+              <span class="badge badge-secondary text-white">{{ listing.biens }}</span>
+            </h2>
+          </div>
+          <div class="card-body">
+            <div class="listing-heading text-center">
+              <h4 class="text-primary">{{ listing.tittle }}</h4>
+              <p>
+                <i class="fas fa-map-marker text-secondary"></i> {{ listing.city }} {{ listing.state }}, {{ listing.zipcode }}</p>
+            </div>
+            <hr>
+            <div class="row py-2 text-secondary">
+              <div class="col-6">
+                <i class="fas fa-th-large"></i> {% trans "Surface:" %} {{ listing.surface }} m²</div>
+              <div class="col-6">
+                <i class="fas fa-car"></i> {% trans "Garage:" %} {{ listing.garage }}</div>
+            </div>
+            <div class="row py-2 text-secondary">
+              <div class="col-6">
+                <i class="fas fa-bed"></i> {% trans "Chambres:" %} {{ listing.bedrooms }}</div>
+              <div class="col-6">
+                <i class="fas fa-bath"></i> {% trans "salle de bain:" %} {{ listing.bathrooms }}</div>
+            </div>
+            <hr>
+            <div class="row py-2 text-secondary">
+              <div class="col-6">
+                <i class="fas fa-user"></i>{{ listing.realtor }}</div>
+            </div>
+            <div class="row text-secondary pb-2">
+              <div class="col-12">
+                <i class="fas fa-clock"></i>{{ listing.list_date|timesince }}</div>
+            </div>
+            <hr>
+            <a href="{% url 'listing' listing.id %}" class="btn btn-primary btn-block">{% trans "Plus d'informations" %}</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="col-md-12">{% trans "Aucune maison à vendre" %}</div>
+      {% endif %}
+
+
+    </div>
+  </div>
+</section>
+
+<section id="services" class="py-5 bg-secondary text-white">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-4">
+        <i class="fas fa-comment fa-4x mr-4"></i>
+        <hr>
+        <h3>Les services de consultation</h3>
+        <p>Faire de vos rêves notre projet …. Lorsque nous vendons une maison, nous vendons aussi des rêves, de souvenirs, un passé, un avenir. C’est pourquoi, nous restons humains, à l’écoute et bon de bon conseil quant à l’évaluation et à la présentation de votre propriété.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-home fa-4x mr-4"></i>
+        <hr>
+        <h3>Gestion des biens</h3>
+        <p>Mettre en ligne une annonce, fixer un panneau, ouvrir une porte, réaliser une visite… Notre métier ne se réduit pas à cela… L’efficacité, la connaissance des lois en vigueur, le professionnalisme et la maîtrise d’une stratégie marketing étudiée, voilà ce qui fera du temps et de l’argent.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="fas fa-suitcase fa-4x mr-4"></i>
+        <hr>
+        <h3>Location et vente</h3>
+        <p>Votre tranquillité d’esprit fera notre bonheur. Pour arriver à gagner ce pari, nous impliquons en agissant comme si c’était pour nous. L’exigence du travail bien fait est une valeur que nous cultivons pour nous mêmes mais encore plus pour vos projet.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %} | Search Results{% endblock %}
+{% block content %}
+{% load i18n %}
+
+
+<section id="showcase-inner" class="showcase-search text-white py-5">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-12">
+        <form action="{% url 'searchfonddecommerce' %}">
+          <!-- Form Row 1 -->
+          <div class="form-row">
+            <div class="col-md-12 mb-3">
+              <label class="sr-only">Keywords</label>
+              <input type="text" name="keywords" class="form-control" placeholder="Keyword" value="{{values.keywords}}">
+              </div>
+
+          </div>
+
+          <!-- Form Row 2 -->
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label class="sr-only">City</label>
+              <select name="city" class="form-control">
+                <option selected="true" disabled="disabled">{% trans "Cité (Nabeul)" %}</option>
+                {% for key,value in Nabeul_Choices.items %}
+                <option name="city" value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="sr-only">City</label>
+              <select name="city" class="form-control">
+                <option selected="true" disabled="disabled">{% trans "Cité (Sousse)" %}</option>
+                {% for key,value in Sousse_Choices.items %}
+                <option name="city" value="{{ key }}">{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <!-- Form Row 3 -->
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <select name="pricemin" class="form-control">
+                <option selected="true" disabled="disabled">{% trans "Prix (Min)" %}</option>
+                {% for key,value in pricemin_choices.items %}
+                  <option value="{{ key }}" {% if key == values.pricemin %} selected {% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <select name="pricemax" class="form-control">
+                <option selected="true" disabled="disabled">{% trans "Prix (Max)" %}</option>
+                {% for key,value in price_choices.items %}
+                  <option value="{{ key }}" {% if key == values.pricemax %} selected {% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+
+          <!-- Form Row 4 -->
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <select name="surfacemin" class="form-control">
+                <option selected="true" disabled="disabled">{% trans "Surface (Min)" %}</option>
+                {% for key,value in surfacemin_choices.items %}
+                  <option value="{{ key }}" {% if key == values.surfacemin %} selected {% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <select name="surfacemax" class="form-control">
+                <option selected="true" disabled="disabled">{% trans "Surface (Max)" %}</option>
+                {% for key,value in surfacemax_choices.items %}
+                  <option value="{{ key }}" {% if key == values.surfacemax %} selected {% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <button class="btn btn-secondary btn-block mt-4" type="submit">{% trans "Chercher" %}</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Breadcrumb -->
+<section id="bc" class="mt-3">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{%url 'index' %}">
+            <i class="fas fa-home"></i> {% trans "Accueil" %}</a>
+        </li>
+
+        <li class="breadcrumb-item active"> {% trans "Résultats" %}</li>
+      </ol>
+    </nav>
+  </div>
+</section>
+
+
+
+<!-- fonddecommerces -->
+<section id="fonddecommerces" class="py-4">
+  <div class="container">
+    <div class="row">
+      {% if fonddecommerces %}
+        {% for fonddecommerce in fonddecommerces %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card listing-preview">
+            <img class="card-img-top" src="{{fonddecommerce.photo_main.url}}" alt="">
+            <div class="card-img-overlay">
+              <h2>
+                <span class="badge badge-secondary text-white">{{fonddecommerce.price|intcomma}} DT</span>
+                <span class="badge badge-secondary text-white">{{fonddecommerce.type}}</span>
+              </h2>
+            </div>
+            <div class="card-body">
+              <div class="listing-heading text-center">
+                <h4 class="text-primary">{{fonddecommerce.title}}</h4>
+                <p>
+                  <i class="fas fa-map-marker text-secondary"></i> {{fonddecommerce.city}} {{fonddecommerce.state}}, {{fonddecommerce.zipcode}}</p>
+              </div>
+              <hr>
+              <div class="row py-2 text-secondary">
+                <div class="col-8">
+                  <i class="fas fa-th-large"></i> {% trans "Surface:" %} {{fonddecommerce.surface}} m²</div>
+              </div>
+              <div class="row py-2 text-secondary">
+                <div class="col-8">
+                  <i class="fas fa-th-large"></i> Type: {{fonddecommerce.type}}</div>
+              </div>
+              <hr>
+              <div class="row py-2 text-secondary">
+                <div class="col-12">
+                  <i class="fas fa-user"></i> {{fonddecommerce.realtor}}</div>
+              </div>
+              <div class="row text-secondary pb-2">
+                <div class="col-12">
+                  <i class="fas fa-clock"></i> {{fonddecommerce.list_date|timesince}}</div>
+              </div>
+              <hr>
+              <a href="{% url 'fonddecommerce' fonddecommerce.id %}" class="btn btn-primary btn-block">{% trans "Plus d'informations" %}</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-md-12">
+          <p>{% trans "Pas de Local commercials Disponible" %}</p>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}

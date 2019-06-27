@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+  <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+
+  <title>CasaPlus {% block title %}{% endblock %}</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="{% static 'css/all.css' %}">
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+  <!-- Custom -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <!-- Lightbox -->
+  <link rel="stylesheet" href="{% static 'css/lightbox.min.css' %}">
+
+</head>
+
+<body>
+  <!-- Top Bar -->
+  {% include 'partials/_topbar.html' %}
+
+  <!-- Navbar -->
+  {% include 'partials/_navbar.html' %}
+
+  {% block content %}
+  {% endblock %}
+
+  <!-- Footer -->
+  {% include 'partials/_footer.html' %}
+  <div id="fb-root"></div>
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/fr_FR/sdk.js#xfbml=1&version=v3.3&appId=454959385074130&autoLogAppEvents=1"></script>
+
+
+  <script src="{% static 'js/jquery-3.3.1.min.js' %} "></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %} "></script>
+  <script src="{% static 'js/lightbox.min.js' %} "></script>
+  <script src="{% static 'js/main.js' %} "></script>
+
+</body>
+
+</html>
