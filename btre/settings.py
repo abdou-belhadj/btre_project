@@ -177,3 +177,9 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'bthouses96@gmail.com'
 EMAIL_HOST_PASSWORD = 'Bthouses1996007'
 EMAIL_PORT = 587
+
+
+try:
+    from .local_settings import *
+except ImportError:
+    pass
